@@ -23,6 +23,7 @@ iTj = zeros(4,4,1);
 
 % Q1.1 and Q1.2
 jointype = zeros(7, 1);
+
 %a
 q = [0; 0; 0; 0; 0; 0; 0;];
 iTj_q = GetDirectGeometry(q, geom_model, jointype);
@@ -47,19 +48,21 @@ disp('iTj_q Q1.1d:'); disp(iTj_q)
 
 %Q1.3
 geom_model = BuildTree();
+jointype = zeros(7, 1);
 numberOfLinks = 7;
 
 % Taking an arbitrary angular input 
-q = [(pi/4); (pi/2); -(pi/8); -(pi/2); (pi/4); (2/(3*pi)); 0;];
+q = [0; 0; 0; 0; 0; 0; 0;];
 iTj_q = GetDirectGeometry(q, geom_model, jointype);
 
 %a
-for i =1:numberOfLinks
-    bTi(:,:,i)= GetTransformationWrtBase(iTj_q, i);
-end
 disp("Q1.3 a");
 fprintf("Transformations of all joints w.r.t. base: \n");
-disp(bTi)
+for i =1:numberOfLinks
+    bTi= GetTransformationWrtBase(iTj_q, i);
+    fprintf("bT%i: \n", i);
+    disp(bTi)
+end
 
 %b
 disp("Q1.3 b");
@@ -87,6 +90,14 @@ end
 
 % Q1.4
 % Hint: use plot3() and line() matlab functions. 
+numberOfLinks = 7;
+geom_model = BuildTree();
+
+% Initial
+qi = [0; 0; 0; 0; 0; 0; 0;];
+qf = [0; 0; 0; 0; 0; 0; 0;];
+jointype = zeros(7, 1);
+Simulate(qi, qf, jointype, numberOfLinks, geom_model, "Initial");
 
 % a
 qi = [0; 0; 0; 0; 0; 0; 0;];
@@ -109,14 +120,19 @@ Simulate(qi, qf, jointype, numberOfLinks, geom_model, "Q1.4 c");
 %% 
 
 % Q1.5
+geom_model = BuildTree();
+numberOfLinks = 7;
+
 qi = [1.3; 0.1; 0.1; 1; 0.2; 0.3; 1.3;];
 qf = [0; 0; 0; 0; 0; 0; 0;];
 jointype = zeros(7, 1);
 for i = 1:length(qf)
     qf(i) = 2;
+    disp(qf)
     chr = int2str(i);
     str = "Q1.5 - Joint " + chr + " actuation";
     Simulate(qi, qf, jointype, numberOfLinks, geom_model, str);
+    qi(i) = qf(i);
 end
 
 
@@ -146,5 +162,7 @@ end
 % zlim([0 800]);
 % grid on
 % grid minor
+%% 
+
 
 
